@@ -1,40 +1,19 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Navbar from '../components/Navbar.astro';
+import Home from '../components/sections/Home.astro';
+import About from '../components/sections/About.astro';
+import Projects from '../components/sections/Projects.astro';
+import Contact from '../components/sections/Contact.astro';
 ---
 
 <BaseLayout>
     <Navbar />
     
     <main class="main-content">
-        <section id="home" class="section">
-            <div class="home-container">
-                <h1 class="hero-title">hi, i'm asteria!</h1>
-                <p class="hero-summary">
-                    this is a very boring blob of text no one will ever read and will get replaced!
-                </p>
-            </div>
-        </section>
-
-        <section id="about" class="section">
-            <div class="section-content">
-                <h2 class="section-title">about</h2>
-                <p>Coming soon...</p>
-            </div>
-        </section>
-
-        <section id="projects" class="section">
-            <div class="section-content">
-                <h2 class="section-title">projects</h2>
-                <p>Coming soon...</p>
-            </div>
-        </section>
-
-        <section id="contact" class="section">
-            <div class="section-content">
-                <h2 class="section-title">contact</h2>
-                <p>Coming soon...</p>
-            </div>
-        </section>
+        <Home />
+        <About />
+        <Projects />
+        <Contact />
     </main>
 </BaseLayout>
