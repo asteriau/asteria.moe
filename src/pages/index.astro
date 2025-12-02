@@ -11,9 +11,20 @@ import Contact from '../components/sections/Contact.astro';
     <Navbar />
     
     <main class="main-content">
-        <Home />
-        <About />
-        <Projects />
-        <Contact />
+            <section id="home" class="section">
+                <Home />
+            </section>
+            
+            <section id="about" class="section">
+                <About />
+            </section>
+            
+            <section id="projects" class="section">
+                <Projects />
+            </section>
+            
+            <section id="contact" class="section">
+                <Contact />
+            </section>
     </main>
 </BaseLayout>
