@@ -1,7 +1,6 @@
 <div class="rain-background" id="rainBackground"></div>
 
 <script is:inline>
-// This is so shitty but i can't be bothered :P
 class RainManager {
     constructor(rainBackgroundId = 'rainBackground') {
         this.rainBackground = document.getElementById(rainBackgroundId);
@@ -10,9 +9,12 @@ class RainManager {
             return;
         }
         this.lastDropTime = 0;
-        this.dropInterval = 5;
+        this.dropInterval = 25;
+        this.dropsPerInterval = 3;
         this.animationId = null;
         this.isRunning = false;
+        this.dropPool = [];
+        this.maxPoolSize = 50;
         this.init();
     }
 
@@ -20,21 +22,58 @@ class RainManager {
         this.startRain();
     }
 
-    createRain() {
-        const raindrop = document.createElement('div');
-        raindrop.className = 'raindrop';
-        
-        raindrop.style.left = `${Math.random() * 100}vw`;
-        raindrop.style.height = `${15 + Math.random() * 10}px`;
-        raindrop.style.animationDuration = `${0.8 + Math.random() * 0.7}s`;
-        raindrop.style.opacity = 0.2 + Math.random() * 0.2;
-        
-        this.rainBackground.appendChild(raindrop);
+    createDropElement() {
+        const drop = document.createElement('div');
+        drop.className = 'raindrop';
+        return drop;
+    }
 
-        // Clean up after animation ends
-        raindrop.addEventListener('animationend', () => {
-            raindrop.remove();
-        });
+    getDropFromPool() {
+        if (this.dropPool.length > 0) {
+            return this.dropPool.pop();
+        }
+        return this.createDropElement();
+    }
+
+    returnDropToPool(drop) {
+        if (this.dropPool.length < this.maxPoolSize) {
+            drop.style.transform = '';
+            drop.style.opacity = '';
+            this.dropPool.push(drop);
+        }
+    }
+
+    spawnRaindrops() {
+        const fragment = document.createDocumentFragment();
+
+        for (let i = 0; i < this.dropsPerInterval; i++) {
+            const raindrop = this.getDropFromPool();
+
+            const left = Math.random() * 100;
+            const height = 20 + Math.random() * 15;
+            const duration = 0.6 + Math.random() * 0.4;
+            const opacity = 0.15 + Math.random() * 0.25;
+            const delay = Math.random() * 0.1;
+            const angle = -2 + Math.random() * 4;
+
+            raindrop.style.left = `${left}vw`;
+            raindrop.style.height = `${height}px`;
+            raindrop.style.opacity = opacity;
+            raindrop.style.animationDuration = `${duration}s`;
+            raindrop.style.animationDelay = `${delay}s`;
+            raindrop.style.setProperty('--wind-angle', `${angle}deg`);
+
+            fragment.appendChild(raindrop);
+
+            setTimeout(() => {
+                if (raindrop.parentNode) {
+                    raindrop.parentNode.removeChild(raindrop);
+                }
+                this.returnDropToPool(raindrop);
+            }, (duration + delay) * 1000);
+        }
+
+        this.rainBackground.appendChild(fragment);
     }
 
     rainLoop(timestamp) {
@@ -44,7 +83,7 @@ class RainManager {
         const elapsed = timestamp - this.lastDropTime;
 
         if (elapsed > this.dropInterval) {
-            this.createRain();
+            this.spawnRaindrops();
             this.lastDropTime = timestamp - (elapsed % this.dropInterval);
         }
 
@@ -53,7 +92,7 @@ class RainManager {
 
     startRain() {
         if (this.isRunning) return;
-        
+
         this.isRunning = true;
         this.lastDropTime = 0;
         this.animationId = requestAnimationFrame((ts) => this.rainLoop(ts));
@@ -76,7 +115,6 @@ class RainManager {
     }
 }
 
-// Initialize when DOM is fully loaded
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initRain);
 } else {
@@ -85,8 +123,7 @@ if (document.readyState === 'loading') {
 
 function initRain() {
     const rainManager = new RainManager('rainBackground');
-    
-    // Resume rain when tab becomes visible
+
     document.addEventListener('visibilitychange', () => {
         rainManager.handleVisibilityChange();
     });
