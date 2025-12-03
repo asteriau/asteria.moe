@@ -223,7 +223,7 @@ body {
 .footer {
     background: rgba(21, 21, 21, 0.95);
     border-top: 0.5px solid var(--color-border);
-    padding: 30px 40px;
+    padding: 15px 20px;
     text-align: center;
     font-size: var(--font-size-small);
     color: var(--color-fg);
