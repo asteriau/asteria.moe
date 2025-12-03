@@ -1,5 +1,14 @@
+<section id="about" class="section">
+  <div class="section-content">
+    <h2 class="section-title">about</h2>
+    <div class="about-box">
+      <p>Coming soon...</p>
+    </div>
+  </div>
+</section>
+
 <style>
-.about-box {
+  .about-box {
     background: rgba(21, 21, 21, 0.95);
     border: 0.5px solid var(--color-border);
     border-radius: 4px;
@@ -8,20 +17,10 @@
     padding: 40px;
     max-width: 900px;
     margin: 0 auto;
-}
-
-.about-box p {
+  }
+  .about-box p {
     margin: 0;
     line-height: 1.6;
     font-size: var(--font-size-small);
-}
+  }
 </style>
-
-<section id="about" class="section">
-    <div class="section-content">
-        <h2 class="section-title">about</h2>
-        <div class="about-box">
-            <p>Coming soon...</p>
-        </div>
-    </div>
-</section>

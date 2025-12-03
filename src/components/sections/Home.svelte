@@ -1,5 +1,26 @@
-<style>
+<script>
+  export let current; // optional if needed for SPA routing
+</script>
 
+<section id="home" class="section home-section">
+  <div class="home-container">
+    <h1 class="hero-title">
+      hi, i'm <span class="asteria">asteria</span>!
+    </h1>
+
+    <p class="hero-summary">
+      this is a very boring blob of text no one will ever read and will get replaced!
+    </p>
+  </div>
+
+  <hr />
+
+  <div class="bio-box">
+    <p></p>
+  </div>
+</section>
+
+<style>
 .asteria {
     position: relative;
     display: inline-block;
@@ -69,19 +90,3 @@ hr {
     font-size: var(--font-size-small);
 }
 </style>
-
-<section id="home" class="section home-section">
-    <div class="home-container">
-        <h1 class="hero-title">
-            hi, i'm <span class="asteria">asteria</span>!
-        </h1>
-
-        <p class="hero-summary">
-            this is a very boring blob of text no one will ever read and will get replaced!
-        </p>
-    </div>
-    <hr />
-    <div class="bio-box">
-        <p></p>
-    </div>
-</section>
