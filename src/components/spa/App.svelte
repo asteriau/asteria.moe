@@ -1,6 +1,6 @@
 <script lang="ts">
   import { writable } from 'svelte/store';
-  import { fade, slide } from 'svelte/transition';
+  import { fade } from 'svelte/transition';
   import Navbar from '../Navbar.svelte';
   import Home from '../sections/Home.svelte';
   import About from '../sections/About.svelte';
@@ -21,36 +21,51 @@
 <Navbar {current} {go} />
 
 <main class="main-content">
-  {#if current === '/'}
-    <div in:fade={{ duration: 300 }} out:fade={{ duration: 300 }}>
-      <Home />
-    </div>
-  {:else if current === '/about'}
-    <div in:fade={{ duration: 300 }} out:fade={{ duration: 300 }}>
-      <About />
-    </div>
-  {:else if current === '/projects'}
-    <div in:fade={{ duration: 300 }} out:fade={{ duration: 300 }}>
-      <Projects />
-    </div>
-  {:else if current === '/contact'}
-    <div in:fade={{ duration: 300 }} out:fade={{ duration: 300 }}>
-      <Contact />
-    </div>
-  {/if}
+  <!-- Stack container keeps relative flow -->
+  <div class="page-stack">
+    {#if current === '/'}
+      <div class="page" in:fade={{ duration: 300 }} out:fade={{ duration: 300 }}>
+        <Home />
+      </div>
+    {:else if current === '/about'}
+      <div class="page" in:fade={{ duration: 300 }} out:fade={{ duration: 300 }}>
+        <About />
+      </div>
+    {:else if current === '/projects'}
+      <div class="page" in:fade={{ duration: 300 }} out:fade={{ duration: 300 }}>
+        <Projects />
+      </div>
+    {:else if current === '/contact'}
+      <div class="page" in:fade={{ duration: 300 }} out:fade={{ duration: 300 }}>
+        <Contact />
+      </div>
+    {/if}
+  </div>
 </main>
-
 
 <style>
   .main-content {
     position: relative;
-    overflow: hidden; /* prevent scroll jump during transitions */
+    flex: 1 0 auto;
   }
 
-  main > * {
-    position: absolute;
+  .page-stack {
+    position: relative;
     width: 100%;
-    top: 0;
-    left: 0;
+    min-height: 100%;
+  }
+
+  .page {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+  }
+
+  .model-wrapper {
+    position: relative;
+    width: 100%;
+    height: 500px; 
+    overflow: hidden;
+    border-radius: 20px;
   }
 </style>
