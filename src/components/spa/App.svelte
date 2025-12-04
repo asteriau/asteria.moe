@@ -44,22 +44,25 @@
 </main>
 
 <style>
-  .main-content {
-    position: relative;
-    flex: 1 0 auto;
-  }
+.main-content {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+}
 
-  .page-stack {
-    position: relative;
-    width: 100%;
-    min-height: 100%;
-  }
+.page-stack {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
 
-  .page {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-  }
+.page {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
 
   .model-wrapper {
     position: relative;
