@@ -422,7 +422,7 @@
 						</div>
 					{:else}
 						<div class="no-lyrics">
-							<p>Play a song to see lyrics</p>
+							<p>No song is currently playing :c</p>
 						</div>
 					{/if}
 				</div>
@@ -807,9 +807,8 @@
 		.no-lyrics {
 			text-align: center;
 			opacity: 0.5;
-			font-size: 0.85rem;
+			font-size: 1.2rem;
 			padding: 1rem;
-			background: rgba(141, 163, 185, 0.05);
 			border-radius: 8px;
 			width: 100%;
 		}
