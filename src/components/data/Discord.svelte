@@ -60,6 +60,14 @@
 		background: rgba(25, 25, 25, 1);
 		border-radius: 12px;
 		padding: 1rem;
+		/* Match Spotify's full height - using min-height instead of height */
+		min-height: 200px;
+		height: auto; /* Allow it to grow if needed */
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		/* Ensure box-sizing includes padding */
+		box-sizing: border-box;
 	}
 
 	.rpc-main {
@@ -67,6 +75,8 @@
 		gap: 1rem;
 		align-items: center;
 		width: 100%;
+		justify-content: center;
+		flex-wrap: wrap;
 	}
 
 	.rpc-images {
@@ -99,12 +109,18 @@
 	.rpc-text {
 		flex: 1;
 		min-width: 0;
+		max-width: 200px;
 
 		h3 {
 			margin: 0 0 0.5rem 0;
 			font-size: 1.2rem;
 			font-weight: 600;
 			line-height: 1.3;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			display: -webkit-box;
+			-webkit-line-clamp: 2;
+			-webkit-box-orient: vertical;
 		}
 
 		h5 {
@@ -113,6 +129,9 @@
 			font-weight: 400;
 			opacity: 0.8;
 			line-height: 1.4;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
 
 			&.details {
 				font-weight: 500;
@@ -126,10 +145,17 @@
 	}
 
 	@media (max-width: 768px) {
+		.rpc-box {
+			min-height: 160px;
+			padding: 0.75rem; /* Reduce padding on mobile */
+		}
+
 		.rpc-main {
 			flex-direction: column;
-			align-items: flex-start;
-			gap: 1rem;
+			align-items: center;
+			gap: 0.75rem; /* Reduce gap on mobile */
+			justify-content: center;
+			height: 100%;
 		}
 
 		.big {
@@ -140,10 +166,89 @@
 		.small {
 			height: 28px;
 			width: 28px;
+			bottom: -6px;
+			right: -6px;
 		}
 
 		.rpc-text {
 			width: 100%;
+			max-width: none;
+			text-align: center;
+			flex: none; /* Reset flex on mobile */
+			
+			h3 {
+				font-size: 1.1rem;
+				margin-bottom: 0.25rem;
+				-webkit-line-clamp: 1; /* Single line on mobile */
+			}
+
+			h5 {
+				font-size: 0.85rem;
+				margin: 0.15rem 0;
+				white-space: normal; /* Allow wrapping on mobile */
+				overflow: visible;
+			}
+		}
+	}
+
+	@media (max-width: 480px) {
+		.rpc-box {
+			min-height: 140px;
+			padding: 0.5rem; /* Further reduce padding */
+		}
+
+		.rpc-main {
+			gap: 0.5rem;
+		}
+
+		.big {
+			height: 60px;
+			width: 60px;
+		}
+
+		.small {
+			height: 24px;
+			width: 24px;
+			bottom: -4px;
+			right: -4px;
+			border-width: 2px;
+		}
+
+		.rpc-text {
+			h3 {
+				font-size: 1rem;
+			}
+
+			h5 {
+				font-size: 0.8rem;
+				line-height: 1.3;
+			}
+		}
+	}
+
+	@media (max-width: 360px) {
+		.rpc-box {
+			min-height: 130px;
+			padding: 0.4rem;
+		}
+
+		.rpc-main {
+			gap: 0.4rem;
+		}
+
+		.big {
+			height: 50px;
+			width: 50px;
+		}
+
+		.rpc-text {
+			h3 {
+				font-size: 0.9rem;
+			}
+
+			h5 {
+				font-size: 0.75rem;
+			}
 		}
 	}
 </style>

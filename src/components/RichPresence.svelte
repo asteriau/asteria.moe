@@ -115,7 +115,7 @@
 
 	function localTime() {
 		return new Date().toLocaleTimeString('en-US', {
-			timeZone: 'America/New_York',
+			timeZone: 'Europe/Bucharest',
 			hour12: true,
 			hour: 'numeric',
 			minute: '2-digit'
