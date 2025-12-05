@@ -1,5 +1,5 @@
 <script lang="ts">
-  import App from '$lib/components/spa/App.svelte';
+  import Home from '$lib/components/sections/Home.svelte';
 </script>
 
-<App />
+<Home />

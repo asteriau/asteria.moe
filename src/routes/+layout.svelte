@@ -1,6 +1,13 @@
 <script lang="ts">
-  import Footer from '$lib/components/Footer.svelte';
+  import Footer from '$lib/components/layout/Footer.svelte';
+  import Navbar from '$lib/components/layout/Navbar.svelte';
+  import MobileNav from '$lib/components/layout/MobileNav.svelte';
   import "../app.css";
+
+  import { onMount } from 'svelte';
+  import { page } from '$app/stores';
+  import { fade } from 'svelte/transition';
+  import { cubicInOut } from 'svelte/easing';
 
   // Default meta, can be overridden per page later
   export let title = "asteria's website";
@@ -9,7 +16,6 @@
   export let socialImageUrl = "/social-image.png";
 
   // Typing animation for document.title
-  import { onMount } from 'svelte';
   onMount(() => {
     const fullTitle = "asteria";
     let current = "";
@@ -70,5 +76,17 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </svelte:head>
 
-<slot />
+<Navbar />
+
+<main class="main-content">
+  {#key $page.url.pathname}
+    <div
+      in:fade={{ duration: 350, easing: cubicInOut }}
+    >
+      <slot />
+    </div>
+  {/key}
+</main>
+
+<MobileNav />
 <Footer />

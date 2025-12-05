@@ -1,5 +1,6 @@
 <script>
-  import ModelViewer from '../ModelViewer.svelte';
+  import ModelViewer from '$lib/components/visual/ModelViewer.svelte';
+  import { goto } from '$app/navigation';
   
   let buttonRef;
 
@@ -12,7 +13,7 @@
       setTimeout(() => {
         button.style.transform = 'scale(1)';
         button.style.opacity = '1';
-        window.location.href = '/about';
+        goto('/about');
       }, 150);
     }
   }

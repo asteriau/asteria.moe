@@ -1,5 +1,6 @@
 <script>
-  import Discord from '$lib/data/Discord.svelte';
+  import RichPresence from '$lib/components/presence/RichPresence.svelte';
+
   const DISCORD_ID = "444582693255249950";
 </script>
 
@@ -32,8 +33,8 @@
     </h2>
 
     <p class="hero-summary">
-    stalk me
-    <p/>
+      stalk me
+    </p>
 
 
     <div class="rpc-card">
@@ -43,8 +44,10 @@
 </section>
 
 <style>
-body {
-  color: var(--color-fg)
+
+.section.home-section {
+  /* ensure About page grows with content and isn't vertically cramped */
+  flex: 0 0 auto;
 }
 
 h1.hero-title {
@@ -153,6 +156,10 @@ h2.section-title {
 }
 
 @media screen and (max-width: 768px) {
+  .home-section {
+    padding: 32px 16px 96px; /* extra bottom space so footer never covers activity */
+  }
+
   h1.hero-title {
     font-size: 2.25rem;
   }

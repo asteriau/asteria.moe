@@ -1,12 +1,18 @@
 <script lang="ts">
-  import LightRays from './LightRays.svelte';
+  import LightRays from '$lib/components/layout/LightRays.svelte';
   import { onMount, afterUpdate } from 'svelte';
-
-  export let current: string;
-  export let go: (event: Event, path: string) => void;
+  import { page } from '$app/stores';
+  import { goto } from '$app/navigation';
 
   let navContainer: HTMLElement | null = null;
   let navIndicator: HTMLDivElement | null = null;
+
+  $: currentPath = $page.url.pathname;
+
+  function navigate(event: Event, path: string) {
+    event.preventDefault();
+    goto(path);
+  }
 
   function updateIndicatorPosition() {
     if (!navContainer || !navIndicator) return;
@@ -49,10 +55,46 @@
 <nav bind:this={navContainer} class="navbar">
   <div class="nav-container">
     <ul class="nav-menu">
-      <li><a href="/" on:click={(e) => go(e, '/')} class:active={current === '/'} class="nav-link">home</a></li>
-      <li><a href="/about" on:click={(e) => go(e, '/about')} class:active={current === '/about'} class="nav-link">about</a></li>
-      <li><a href="/projects" on:click={(e) => go(e, '/projects')} class:active={current === '/projects'} class="nav-link">projects</a></li>
-      <li><a href="/contact" on:click={(e) => go(e, '/contact')} class:active={current === '/contact'} class="nav-link">contact</a></li>
+      <li>
+        <a
+          href="/"
+          class="nav-link"
+          class:active={currentPath === '/'}
+          on:click={(e) => navigate(e, '/')}
+        >
+          home
+        </a>
+      </li>
+      <li>
+        <a
+          href="/about"
+          class="nav-link"
+          class:active={currentPath === '/about'}
+          on:click={(e) => navigate(e, '/about')}
+        >
+          about
+        </a>
+      </li>
+      <li>
+        <a
+          href="/projects"
+          class="nav-link"
+          class:active={currentPath === '/projects'}
+          on:click={(e) => navigate(e, '/projects')}
+        >
+          projects
+        </a>
+      </li>
+      <li>
+        <a
+          href="/contact"
+          class="nav-link"
+          class:active={currentPath === '/contact'}
+          on:click={(e) => navigate(e, '/contact')}
+        >
+          contact
+        </a>
+      </li>
     </ul>
   </div>
 </nav>

@@ -1,8 +1,8 @@
 <!-- RichPresence.svelte -->
 <script lang="ts">
-	import Discord from './data/Discord.svelte';
-	import Spotify from './data/Spotify.svelte';
-	import type { Spotify as SpotifyType } from './data/Spotify.svelte';
+	import Discord from '$lib/components/presence/Discord.svelte';
+	import Spotify from '$lib/components/presence/Spotify.svelte';
+	import type { Spotify as SpotifyType } from '$lib/components/presence/Spotify.svelte';
 	import { onMount, onDestroy } from 'svelte';
 
 	export let discordId: string;
