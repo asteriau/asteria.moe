@@ -11,7 +11,7 @@
 	let pulse = 30000;
 	let heartbeatInterval: ReturnType<typeof setInterval>;
 	let ws: WebSocket | null = null;
-	
+
 	// Cached data
 	let cachedUserData = null;
 	let cachedActivities = null;
@@ -42,23 +42,19 @@
 		try {
 			// Load Discord user data
 			const savedUserData = localStorage.getItem('cachedDiscordUser');
-			if (savedUserData) {
-				cachedUserData = JSON.parse(savedUserData);
-			}
-			
+			if (savedUserData) cachedUserData = JSON.parse(savedUserData);
+
 			// Load Discord activities
 			const savedActivities = localStorage.getItem('cachedDiscordActivities');
-			if (savedActivities) {
-				cachedActivities = JSON.parse(savedActivities);
-			}
-			
+			if (savedActivities) cachedActivities = JSON.parse(savedActivities);
+
 			// Load Discord status
 			const savedStatus = localStorage.getItem('cachedDiscordStatus');
 			if (savedStatus) {
-				cachedDiscordStatus = savedStatus; 
+				cachedDiscordStatus = savedStatus;
 				console.log('Loaded cached Discord status:', cachedDiscordStatus);
 			}
-			
+
 			// Load Spotify data
 			const savedLastPlayed = localStorage.getItem('lastPlayedSpotify');
 			if (savedLastPlayed) {
@@ -72,12 +68,10 @@
 					album: parsed.album
 				};
 			}
-			
+
 			// If we have cached data, update UI immediately
-			if (cachedUserData || cachedDiscordStatus) {
-				updateUIFromCache();
-			}
-			
+			if (cachedUserData || cachedDiscordStatus) updateUIFromCache();
+
 		} catch (e) {
 			console.error('Failed to load cached data', e);
 		}
@@ -94,13 +88,11 @@
 				localStorage.setItem('cachedDiscordActivities', JSON.stringify(activities));
 				cachedActivities = activities;
 			}
-			// Save status as a string
 			if (discord_status) {
 				localStorage.setItem('cachedDiscordStatus', discord_status);
 				cachedDiscordStatus = discord_status;
 				console.log('Saved Discord status to cache:', discord_status);
 			}
-			// Save timestamp
 			localStorage.setItem('discordCacheTimestamp', Date.now().toString());
 		} catch (e) {
 			console.error('Failed to save Discord data', e);
@@ -110,60 +102,51 @@
 	// Update UI from cached data while waiting for fresh data
 	function updateUIFromCache() {
 		console.log('Updating UI from cache');
-		
+
 		// Set username from cache
 		let username = 'Discord User';
 		if (cachedUserData) {
 			username = cachedUserData.username || cachedUserData.global_name || 'Discord User';
 		} else {
-			// Try to get username from separate storage
 			const savedUsername = localStorage.getItem('cachedDiscordUsername');
 			if (savedUsername) username = savedUsername;
 		}
 		discordActivity = `@${username}`;
-		
-		// Set status from cache 
+
+		// Set status from cache
 		if (cachedDiscordStatus) {
 			let status = cachedDiscordStatus;
-			if (status === 'dnd') {
-				status = 'Do Not Disturb';
-			} else {
-				status = status.charAt(0).toUpperCase() + status.slice(1);
-			}
+			status = status === 'dnd' ? 'Do Not Disturb' : status.charAt(0).toUpperCase() + status.slice(1);
 			discordDetails = status;
 			console.log('Set status from cache:', status);
 		} else {
-			// Fallback: try to get status from separate storage
 			const savedStatus = localStorage.getItem('cachedStatus');
 			if (savedStatus) {
-				let status = savedStatus;
-				if (status === 'dnd') status = 'Do Not Disturb';
-				else status = status.charAt(0).toUpperCase() + status.slice(1);
+				let status = savedStatus === 'dnd' ? 'Do Not Disturb' : savedStatus.charAt(0).toUpperCase() + savedStatus.slice(1);
 				discordDetails = status;
 			} else {
 				discordDetails = 'Offline';
 			}
 		}
-		
+
 		// Set time
 		discordState = localTime();
 		discordIsActivity = false;
-		
+
 		// If we have cached activities, try to restore them
-		if (cachedActivities && cachedActivities.length > 0) {
-			processCachedActivities(cachedActivities);
-		}
-		
+		if (cachedActivities?.length) processCachedActivities(cachedActivities);
+
 		// Update Spotify from cache if needed
-		if (lastPlayedSpotify && !spotifyIsPlaying) {
-			spotifyData = lastPlayedSpotify;
-		}
+		if (lastPlayedSpotify && !spotifyIsPlaying) spotifyData = lastPlayedSpotify;
 	}
 
-	function processCachedActivities(activities: any[]) {
-	}
+	function processCachedActivities(activities: any[]) {}
 
-	function processImageUrl(image: string, application_id?: string) {
+	function processImageUrl(image: string | null, application_id?: string) {
+		if (!image) return 'default.webp';
+		if (image.startsWith('http')) return image;
+		if (application_id) return `https://cdn.discordapp.com/app-assets/${application_id}/${image}.webp?size=512`;
+		return 'default.webp';
 	}
 
 	function handleDataUpdate(d: any) {
@@ -179,10 +162,7 @@
 		if (spotifyIsPlaying && d.spotify) {
 			spotifyData = d.spotify;
 			lastPlayedSpotify = d.spotify;
-			localStorage.setItem('lastPlayedSpotify', JSON.stringify({
-				...d.spotify,
-				last_played: Date.now()
-			}));
+			localStorage.setItem('lastPlayedSpotify', JSON.stringify({ ...d.spotify, last_played: Date.now() }));
 		} else if (lastPlayedSpotify) {
 			spotifyIsPlaying = false;
 			spotifyData = lastPlayedSpotify;
@@ -195,16 +175,16 @@
 		discordIsActivity = false;
 		discordIsSpotifyActivity = false;
 
-		if (d.activities && d.activities.length > 0) {
+		if (d.activities?.length) {
 			const activities = d.activities.filter((act: any) => {
-				if (act.name === 'Spotify' || (act.application_id && act.application_id === 'spotify')) {
+				if (act.name === 'Spotify' || act.application_id === 'spotify') {
 					discordIsSpotifyActivity = true;
 					return false;
 				}
 				return act.type !== 4;
 			});
 
-			if (activities.length > 0) {
+			if (activities.length) {
 				discordIsActivity = true;
 				const act = activities[0];
 
@@ -212,44 +192,28 @@
 				discordDetails = act.details || '';
 				discordState = act.state || '';
 
-				if (act.assets && act.assets.large_image) {
-					discordImage = processImageUrl(act.assets.large_image, act.application_id);
-				} else {
-					discordImage = 'default.webp';
-				}
+				if (act.assets?.large_image) discordImage = processImageUrl(act.assets.large_image, act.application_id);
+				else discordImage = 'default.webp';
 
-				if (act.assets && act.assets.small_image && act.application_id) {
+				if (act.assets?.small_image && act.application_id) {
 					discordSmallImage = `https://cdn.discordapp.com/app-assets/${act.application_id}/${act.assets.small_image}.webp?size=512`;
 				} else {
 					discordSmallImage = '';
 				}
-			} else {
-				handleNoDiscordActivity(d);
-			}
-		} else {
-			handleNoDiscordActivity(d);
-		}
+			} else handleNoDiscordActivity(d);
+		} else handleNoDiscordActivity(d);
 	}
 
 	function handleNoDiscordActivity(d: any) {
-		// Get username from fresh data or cache
 		let username = 'Discord';
-		if (d.discord_user) {
-			username = d.discord_user.username || d.discord_user.global_name || 'Discord';
-		} else if (cachedUserData) {
-			username = cachedUserData.username || cachedUserData.global_name || 'Discord';
-		}
+		if (d.discord_user) username = d.discord_user.username || d.discord_user.global_name || 'Discord';
+		else if (cachedUserData) username = cachedUserData.username || cachedUserData.global_name || 'Discord';
 		discordActivity = `@${username}`;
 
-		// Get status from fresh data or cache
 		let status = d.discord_status || cachedDiscordStatus || 'offline';
 		console.log('Status for display:', status, 'from fresh:', d.discord_status, 'from cache:', cachedDiscordStatus);
-		
-		if (status === 'dnd') {
-			status = 'Do Not Disturb';
-		} else {
-			status = status.charAt(0).toUpperCase() + status.slice(1);
-		}
+
+		status = status === 'dnd' ? 'Do Not Disturb' : status.charAt(0).toUpperCase() + status.slice(1);
 
 		discordDetails = status;
 		discordState = localTime();
@@ -302,21 +266,13 @@
 
 				if (op === 1) {
 					pulse = d.heartbeat_interval;
-					ws?.send(JSON.stringify({
-						op: 2,
-						d: { subscribe_to_id: discordId }
-					}));
+					ws?.send(JSON.stringify({ op: 2, d: { subscribe_to_id: discordId } }));
 
 					if (heartbeatInterval) clearInterval(heartbeatInterval);
-					heartbeatInterval = setInterval(
-						() => ws?.send(JSON.stringify({ op: 3 })),
-						pulse
-					);
+					heartbeatInterval = setInterval(() => ws?.send(JSON.stringify({ op: 3 })), pulse);
 				}
 
-				if (op === 0) {
-					handleDataUpdate(d);
-				}
+				if (op === 0) handleDataUpdate(d);
 			} catch (error) {
 				console.error('Error parsing WebSocket message:', error);
 			}
@@ -326,7 +282,7 @@
 			console.log('Disconnected, reconnecting...', e.code);
 			isConnected = false;
 			reconnectAttempts++;
-			
+
 			const delay = 2500 * Math.pow(1.5, reconnectAttempts);
 			setTimeout(connect, Math.min(delay, 30000));
 		};
@@ -338,21 +294,15 @@
 	}
 
 	onMount(() => {
-		// Load all cached data immediately
 		loadCachedData();
-		
-		// Update local time periodically
+
 		const timeInterval = setInterval(() => {
-			if (!discordIsActivity && !spotifyIsPlaying) {
-				discordState = localTime();
-			}
+			if (!discordIsActivity && !spotifyIsPlaying) discordState = localTime();
 		}, 60000);
 
-		if (discordId) {
-			connect();
-		} else {
+		if (discordId) connect();
+		else {
 			console.error('No discordId provided');
-			// Show cached data
 			updateUIFromCache();
 		}
 
@@ -374,7 +324,7 @@
 			isActivity={discordIsActivity}
 			elapsed={discordElapsed}
 		/>
-		
+
 		<Spotify
 			data={spotifyData}
 			isPlaying={spotifyIsPlaying}
@@ -415,7 +365,7 @@
 			grid-template-columns: 1fr;
 			gap: 0.75rem;
 		}
-		
+
 		:global(.rpc-box),
 		:global(.spotify-box) {
 			height: 160px !important;
